@@ -114,7 +114,8 @@
 	
 	<section>
 		<form action="UserJoinPro.us" onsubmit="return checkSubmit()" method="post" name="fr">
-		
+			<h1>회원가입</h1>
+			
 			<h3>이름</h3>
 			<input class="input1 inputAble" type="text" name="name" required="required">
 			
