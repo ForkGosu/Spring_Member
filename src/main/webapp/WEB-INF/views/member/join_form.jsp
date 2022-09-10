@@ -8,12 +8,69 @@
 <link href="resources/css/nomal.css" rel="stylesheet">
 <!-- 다음 우편번호 API 포함시키기 -->
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-<script>
-	// check_id.jsp 파일을 새창에서 열기
-	function checkDuplicateId() {
-		// 파라미터 넘겨줘서 아이디 바로 기입되게 만들기
-		window.open("UserCheckIdForm.us?user_email="+document.fr.user_email.value+'@'+document.fr.user_email2.value+"&isDuplicate=null", "check_id", "width=500,height=400");
-	}
+<script src="resources/js/jquery-3.6.0.js"></script>
+<script type="text/javascript">
+// Ajax를 이용한 id와 email 중복 확인
+$(function() {
+	// 아이디 중복 확인
+	$("#idCheck").change(function() {
+		let id = document.fr.id.value;
+		if(id.length < 5 || id.length > 20){
+			$(".id").html("아이디<span id='fail'> 아이디를 5~20자리로 입력해주십시오</span>");
+			return;
+		}
+		$.ajax({
+			type: "get",
+			url: "IdDuplicate.me",
+			data: {
+				id: id
+			},
+			dataType: "text",
+			success: function(response) {
+				$(".id").html(response);
+			}
+		});
+	});
+	// 이메일 중복 확인
+	$("#emailCheck").on("click", function() {
+		let email = document.fr.email.value + '@' + document.fr.email2.value;
+		$.ajax({
+			type: "get",
+			url: "EmailDuplicate.me",
+			data:  {
+				email: email
+			},
+			dataType: "text",
+			success: function(response) {
+				$(".email").html(response);
+			}
+		});
+	});
+	
+	// 비밀번호 입력 처리
+	$("#passwdCheck").change(function() {
+		let passwd = document.fr.passwd.value;
+		if(passwd.length < 8 || passwd.length > 16){
+			$(".passwd").html("비밀번호<span id='fail'> 비밀번호를 8~16자리로 입력해주십시오</span>");
+			return;
+		} else {
+			$(".passwd").html("비밀번호<span id='success'> 사용가능한 비밀번호 입니다!</span>");
+			return;
+		}
+	});
+	// 비밀번호 확인 처리
+	$("#passwdCheck2").change(function() {
+		let passwd = document.fr.passwd.value;
+		let passwd2 = document.fr.passwd2.value;
+		if(passwd2 != passwd){
+			$(".passwd2").html("비밀번호 확인<span id='fail'> 비밀번호가 일치하지 않습니다.</span>");
+			return;
+		} else {
+			$(".passwd2").html("비밀번호 확인<span id='success'> 확인 완료!</span>");
+			return;
+		}
+	});
+});
 	
 	// 중복체크 - 아이디 조금이라도 바뀌면 X 표시
 	function checkIdOnkeydown() {
@@ -76,8 +133,8 @@
                 }
 
                 // 우편번호와 주소 정보를 해당 필드에 넣는다.
-                document.getElementById('sample4_postcode').value = data.zonecode;
-                document.getElementById("sample4_roadAddress").value = roadAddr;
+                document.getElementById("postcode").value = data.zonecode;
+                document.getElementById("roadAddress").value = roadAddr;
 //                 document.getElementById("sample4_jibunAddress").value = data.jibunAddress;
             }
 		 
@@ -119,40 +176,50 @@
 			<h3>이름</h3>
 			<input class="input1 inputAble" type="text" name="name" required="required">
 			
-			<h3>아이디</h3>
-			<input class="input1 inputAble" type="text" name="id" required="required">
+			<h3 class="id">아이디<span id="fail"> 아이디를 입력하세요.</span></h3>
+			<input id="idCheck" class="input1 inputAble" type="text" name="id" required="required">
 			
-			<h3>이메일<span id="duplicate" class="str" style="color: red;"> 중복체크 X</span></h3>
+			<h3 class="email">이메일<span id="fail"> 이메일을 입력하세요.</span></h3>
 			<div class="inputGroups">
 				<div class="inputGroup">
-					<input class="input1 inputAble" type="text" class="tyte" name="user_email" required="required" onkeydown="checkIdOnkeydown()">
+					<input class="input1 inputAble" type="text" name="email" required="required">
 				</div>
 				<div class="inputGroupDot">
 					@
 				</div>
 				<div class="inputGroup">
-					<input class="input1 inputAble" type="text" class="tyte" name="user_email2" required="required" onkeydown="checkIdOnkeydown()">
+					<input class="input1 inputAble" type="text" name="email2" required="required">
 				</div>
 				<div class="inputGroup">
-					<input class="input1 button1" type="button" onclick="checkDuplicateId()" value="중복체크">
+					<input id="emailCheck" class="input1 button1" type="button" value="인증번호">
 				</div>
 			</div>
 				
-			<h3>비밀번호</h3>
-			<input class="input1 inputAble" type="password" name="user_passwd" placeholder="8 ~ 16글자 사이 입력" 
-						onchange="checkPasswdLength()" required="required" maxlength="16">
+			<h3 class="passwd">비밀번호</h3>
+			<input id="passwdCheck" class="input1 inputAble" type="password" name="passwd" placeholder="8 ~ 16글자 사이 입력" 
+						required="required" maxlength="16">
 			
-			<h3>비밀번호확인</h3>
-			<input class="input1 inputAble" type="password" name="user_passwd2" placeholder="8 ~ 16글자 사이 입력" 
-							onchange="checkConfirmPasswd()" required="required" maxlength="16">
+			<h3 class="passwd2">비밀번호확인</h3>
+			<input id="passwdCheck2" class="input1 inputAble" type="password" name="passwd2" placeholder="8 ~ 16글자 사이 입력" 
+							required="required" maxlength="16">
 							<span id="confirmPasswdResult"></span>
 		 
-			<h3>성별</h3>
-			<div class="select">
-				<input type="radio" id="남" name="gender" checked="checked"><label for="남">남자</label>
-				<input type="radio" id="여" name="gender"><label for="여">여자</label>
+			<h3>우편 번호 및 도로명 주소</h3>
+		 	<div class="inputGroups">
+		 		<div class="inputGroup">
+					<input class="input1 inputAble" type="text" class="input2 inputAble" id="postcode" name="address_code" placeholder="우편번호" required="required" readonly="readonly" onclick="execDaumPostcode()">
+				</div>
+		 		<div class="inputGroupThirty">
+					<input class="input1 button1" type="button" class="input2 inputAble" onclick="execDaumPostcode()" value="우편번호 찾기">
+				</div>
 			</div>
-	 
+			<input type="text" class="input1 inputAble" id="roadAddress" name="address"  placeholder="도로명주소" required="required" readonly="readonly" onclick="execDaumPostcode()">
+			<h3>상세 주소</h3>
+			<input type="text" class="input1 inputAble" id="detailAddress" name="address2"  placeholder="상세주소" required="required">
+			
+			<h3>휴대폰</h3>
+			<input class="input1 inputAble" type="text" name="phone" maxlength="11" placeholder="-없이 숫자만 입력" required="required">
+			
 			<h3>주민번호</h3>
 			<div class="inputGroups">
 				<div class="inputGroup">
@@ -162,25 +229,15 @@
 					-
 				 </div>
 				<div class="inputGroup">
-					<input class="input1 inputAble" type="text" name="jumin2" required="required" maxlength="7">
+					<input class="input1 inputAble" type="password" name="jumin2" required="required" maxlength="7">
 				</div>
 			</div>
-				 
-			<h3>우편 번호 및 도로명 주소</h3>
-		 	<div class="inputGroups">
-		 		<div class="inputGroup">
-					<input class="input1 inputAble" type="text" class="input2 inputAble" id="sample4_postcode" name="address_code" placeholder="우편번호" required="required" readonly="readonly" onclick="execDaumPostcode()">
-				</div>
-		 		<div class="inputGroupThirty">
-					<input class="input1 button1" type="button" class="input2 inputAble" onclick="execDaumPostcode()" value="우편번호 찾기">
-				</div>
-			</div>
-			<input type="text" class="input1 inputAble" id="sample4_roadAddress" name="address"  placeholder="도로명주소" required="required" readonly="readonly" onclick="execDaumPostcode()">
-			<h3>상세 주소</h3>
-			<input type="text" class="input1 inputAble" id="sample4_detailAddress" name="address2"  placeholder="상세주소" required="required">
 			
-			<h3>휴대폰</h3>
-			<input class="input1 inputAble" type="text" name="phone" maxlength="11" placeholder="-없이 숫자만 입력" required="required">
+			<h3>성별</h3>
+			<div class="select">
+				<input type="radio" id="남" name="gender" checked="checked"><label for="남">남자</label>
+				<input type="radio" id="여" name="gender"><label for="여">여자</label>
+			</div>
 			
 			<input class="input1 button1" type="submit" value="가입하기">
 		</form>

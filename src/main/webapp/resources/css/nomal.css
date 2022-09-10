@@ -15,6 +15,12 @@ a:hover {
 	color: gray;
 }
 
+span#fail{
+	color: red;
+}
+span#success{
+	color: green;
+}
 /* 헤더 지역 */
 header .top{
 	height: 100px;
@@ -101,6 +107,13 @@ header .memberSection div:hover{
     width: 30%;
     vertical-align: middle;
 }
+.inputGroupMini{
+	display: table-cell;
+    table-layout: fixed;
+    width: 100px;
+    vertical-align: middle;
+}
+
 
 .button1{
 	border: 0px;

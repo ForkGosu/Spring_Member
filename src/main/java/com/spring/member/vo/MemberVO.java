@@ -5,12 +5,13 @@ import java.sql.Date;
 /*
 create table member(
 date date not null,
-id varchar(20) not null,
+name varchar(20) not null,
+id varchar(20) unique not null,
 email varchar(64) unique not null,
 passwd varchar(32) not null,
 gender varchar(1) not null,
 jumin varchar(14) not null,
-phone varchar(20) not null,
+phone varchar(11) not null,
 address_code int not null,
 address varchar(100) not null,
 auth varchar(1) not null
@@ -18,6 +19,7 @@ auth varchar(1) not null
  */
 public class MemberVO {
 	private Date date;
+	private String name;
 	private String id;
 	private String email;
 	private String passwd;
@@ -32,6 +34,12 @@ public class MemberVO {
 	}
 	public void setDate(Date date) {
 		this.date = date;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
 	}
 	public String getId() {
 		return id;
