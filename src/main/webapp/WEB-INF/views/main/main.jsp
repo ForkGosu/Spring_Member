@@ -34,10 +34,10 @@
 					</div>
 					<div class="tab_area">
 						<div class="tab_box">
-							<a href="MyPage.us?sId=tree6316@naver.com" class="tab">마이페이지</a>
-							<a href="MyOrder.us?sId=tree6316@naver.com" class="tab">주문/배송</a>
-							<a href="MyCart.us?sId=tree6316@naver.com" class="tab">장바구니</a>
-							<a href="MyReview.us?sId=tree6316@naver.com" class="tab">내리뷰관리</a>
+							<a href="" class="tab">마이페이지</a>
+							<a href="" class="tab">주문/배송</a>
+							<a href="" class="tab">장바구니</a>
+							<a href="" class="tab">내리뷰관리</a>
 						</div>
 					</div>
 				</div>
