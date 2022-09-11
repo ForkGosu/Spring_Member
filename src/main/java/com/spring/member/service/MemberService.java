@@ -25,12 +25,16 @@ public class MemberService {
 		return mapper.getEmailAuthFromEmail(email);
 	}
 
-	public boolean sendEmailAuthCode(String email, String authCode) {
-		return mapper.sendEmailAuthCode(email, authCode);
+	public boolean sendEmailAuthCode(EmailAuthVO emailAuth) {
+		return mapper.sendEmailAuthCode(emailAuth);
 	}
 
-	public boolean sendEmailAuthCodeUpdate(String email, String authCode) {
-		return mapper.sendEmailAuthCodeUpdate(email, authCode);
+	public boolean sendEmailAuthCodeUpdate(EmailAuthVO emailAuth) {
+		return mapper.sendEmailAuthCodeUpdate(emailAuth);
+	}
+
+	public boolean joinMember(MemberVO member) {
+		return mapper.joinMember(member);
 	}
 
 }

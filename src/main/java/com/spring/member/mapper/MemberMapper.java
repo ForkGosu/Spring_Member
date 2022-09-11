@@ -15,8 +15,11 @@ public interface MemberMapper {
 
 	public EmailAuthVO getEmailAuthFromEmail(@Param("email")String email);
 
-	public boolean sendEmailAuthCode(@Param("email")String email, @Param("authCode")String authCode);
+	public boolean sendEmailAuthCode(EmailAuthVO emailAuth);
 
-	public boolean sendEmailAuthCodeUpdate(@Param("email")String email, @Param("authCode")String authCode);
+	public boolean sendEmailAuthCodeUpdate(EmailAuthVO emailAuth);
+
+	public boolean joinMember(MemberVO member);
+
 
 }

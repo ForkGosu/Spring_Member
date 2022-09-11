@@ -38,19 +38,24 @@ header .memberSection{
 	float: right;
 }
 
-header .memberSection div{
+header .memberSection .logoutStatus>div{
 	display: inline-block;
 	text-align: center;
 }
 
-header .memberSection div a{
+header .memberSection .logoutStatus>div a{
 	font-size: 15px;
 	color: white;
 }
 
-header .memberSection div:hover{
+header .memberSection .logoutStatus>div:hover{
 	background-color: #999;
 }
+
+header .memberSection .loginStatus{
+	background-color: #999;
+}
+
 /* 헤더 지역 끝 */
 
 /* 로그인 지역? */

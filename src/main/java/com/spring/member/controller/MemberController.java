@@ -14,6 +14,8 @@ import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,6 +35,7 @@ public class MemberController {
 	@Autowired
 	MemberService service;
 	
+	///// 회원가입에 관한 메서드 /////
 	// 회원가입 페이지로 이동
 	@RequestMapping(value = "/MemberJoin.me", method = RequestMethod.GET)
 	public String JoinForm() {
@@ -41,7 +44,7 @@ public class MemberController {
 	
 	// 아이디 중복 확인
 	@RequestMapping(value = "/IdDuplicate.me", method = RequestMethod.GET)
-	public String IdDuplicate(@RequestParam(defaultValue = "0")String id, Model model) {
+	public String IdDuplicate(Model model, @RequestParam(defaultValue = "0")String id) {
 		System.out.println("IdDuplicate메서드에 전송된 id값:" + id);
 		MemberVO member = service.getMemberFromId(id);
 		
@@ -52,7 +55,7 @@ public class MemberController {
 	
 	// 이메일 중복 확인
 	@RequestMapping(value = "/EmailDuplicate.me", method = RequestMethod.GET)
-	public String EmailDuplicate(@RequestParam(defaultValue = "")String email, Model model) {
+	public String EmailDuplicate(Model model, @RequestParam(defaultValue = "")String email) {
 		System.out.println("EmailDuplicate메서드에 전송된 email값:" + email);
 		MemberVO member = service.getMemberFromEmail(email);
 
@@ -64,7 +67,7 @@ public class MemberController {
 	
 	// 이메일 인증번호 보내기
 	@RequestMapping(value = "/EmailAuthSend.me", method = RequestMethod.GET)
-	public String EmailAuthSend(@RequestParam(defaultValue = "")String email, Model model) {
+	public String EmailAuthSend(Model model, @RequestParam(defaultValue = "")String email) {
 		System.out.println("EmailAuthSend메서드에 전송된 email값:" + email);
 		
 		GenerateUserAuthenticationCode myAuthCode = new GenerateUserAuthenticationCode(8);
@@ -157,9 +160,13 @@ public class MemberController {
 		
 		// 6-1. 그 전에 이메일로 보낸 인증번호가 없다면 인증코드를 DB에 바로 저장
 		if(emailAuth == null) {
-			isSendEmail = service.sendEmailAuthCode(email, authCode);
+			emailAuth = new EmailAuthVO();
+			emailAuth.setEmail(email);
+			emailAuth.setAuth_code(authCode);
+			isSendEmail = service.sendEmailAuthCode(emailAuth);
 		} else {// 6-2. 이메일로 보낸 인증번호가 있다면 인증코드를 DB에 업데이트
-			isSendEmail = service.sendEmailAuthCodeUpdate(email, authCode);
+			emailAuth.setAuth_code(authCode);
+			isSendEmail = service.sendEmailAuthCodeUpdate(emailAuth);
 		}
 		
 		// 7. 인증코드가 제대로 저장 되었는 지 확인
@@ -171,9 +178,10 @@ public class MemberController {
 	
 	// 인증코드를 이용한 이메일 확인
 	@RequestMapping(value = "/EmailAuthCheck.me", method = RequestMethod.GET)
-	public String EmailAuthCheck(@RequestParam(defaultValue = "")String email, @RequestParam(defaultValue = "")String authCode, Model model) {
+	public String EmailAuthCheck(Model model, @RequestParam(defaultValue = "")String email, @RequestParam(defaultValue = "")String authCode) {
 		EmailAuthVO emailAuth = service.getEmailAuthFromEmail(email);
 		
+		// DB에 저장되어 있는 authCode와 비교하여 맞다면 인증 완료로 true를 넣어줌 아닐경우 false;
 		if(emailAuth.getAuth_code().equals(authCode)) {
 			model.addAttribute("isEmailAuth", true);
 		} else {
@@ -182,15 +190,63 @@ public class MemberController {
 		
 		return "member/join_email_auth";
 	}
-	
+	// 회원가입 수행
+	@RequestMapping(value = "/MemberJoinPro.me", method = RequestMethod.POST)
+	public String MemberJoinPro(Model model, MemberVO member, 
+			@RequestParam(defaultValue = "")String email2, @RequestParam(defaultValue = "")String address2, @RequestParam(defaultValue = "")String jumin2) {
+		member.setEmail(member.getEmail()+'@'+email2);
+		member.setAddress(member.getAddress()+' '+address2);
+		member.setJumin(member.getJumin()+'-'+jumin2);
+		System.out.println(member);
 		
+		
+		boolean isJoin = service.joinMember(member);
+		
+		if(isJoin) {
+			return "redirect:/";
+		} else {
+			model.addAttribute("msg","회원가입 실패!");
+			return "fail_back";
+		}
+	}
+	///// 회원가입에 관한 메서드 끝 /////
+
+	
+	
+	///// 로그인 및 로그아웃에 관한 메서드 /////
 	// 로그인 페이지로 이동
 	@RequestMapping(value = "/MemberLogin.me", method = RequestMethod.GET)
 	public String LoginForm() {
 		return "member/login_form";
 	}
+	// 로그인 확인
+	@RequestMapping(value = "/MemberLoginPro.me", method = RequestMethod.POST)
+	public String LoginPro(Model model, HttpSession session, String id, String passwd) {
+		MemberVO member = service.getMemberFromId(id);
+		
+		// 아이디가 맞는지 확인
+		if(member != null) {
+			// 패스워드가 맞는지 확인
+			if(member.getPasswd().equals(passwd)) {
+				session.setAttribute("sId", member.getEmail());
+				session.setAttribute("sName", member.getName());
+				return "redirect:/";
+			}else {
+				model.addAttribute("msg","로그인 실패!");
+				return "fail_back";
+			}
+		} else {
+			model.addAttribute("msg","로그인 실패!");
+			return "fail_back";
+		}
+	}
 	
-	
-	
+	// 로그아웃 작동
+	@RequestMapping(value = "/MemberLogoutPro.me", method = RequestMethod.GET)
+	public String LogoutPro(HttpServletRequest request) {
+		request.getSession().invalidate();
+		return "redirect:/";
+	}
+	///// 로그인 및 로그아웃에 관한 메서드 끝 /////
 	
 }

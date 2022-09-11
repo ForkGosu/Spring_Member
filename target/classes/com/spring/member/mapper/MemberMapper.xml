@@ -19,11 +19,18 @@
 	
 	<insert id="sendEmailAuthCode">
 		INSERT INTO email_auth 
-		VALUES(#{email}, #{authCode})
+		VALUES(#{email}, #{auth_code})
 	</insert>
 	
 	<update id="sendEmailAuthCodeUpdate">
-		UPDATE email_auth SET auth_code=#{authCode} 
+		UPDATE email_auth SET auth_code=#{auth_code} 
 		WHERE email=#{email}
 	</update>
+	
+	<insert id="joinMember">
+		INSERT INTO member 
+		VALUES(now(), #{name}, #{id}, #{email}, #{passwd}, #{gender}, #{jumin}, #{phone}, 
+		#{address_code}, #{address});
+	</insert>
+	
 </mapper>

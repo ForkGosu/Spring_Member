@@ -21,9 +21,9 @@
 		
 		<form action="MemberLoginPro.me" method="post" id="join">
 			<h3>아이디</h3>
-			<input type="text" class="input1 inputAble" name="id" placeholder="아이디" title="아이디입력">
+			<input type="text" class="input1 inputAble" required="required" name="id" placeholder="아이디" title="아이디입력">
 			<h3>비밀번호</h3>
-			<input type="password" class="input1 inputAble" name="passwd" placeholder="비밀번호" title="비밀번호입력">
+			<input type="password" class="input1 inputAble" required="required" name="passwd" placeholder="비밀번호" title="비밀번호입력">
 			<input type="submit" class="input1 button1" value="로그인" class="submit">
 		</form>
  	</section>

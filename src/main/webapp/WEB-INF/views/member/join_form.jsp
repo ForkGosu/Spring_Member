@@ -256,7 +256,7 @@ $(function() {
 	<!-- 로고지역 끝 -->
 	
 	<section>
-		<form action="MemberJoinPro.us" onsubmit="return checkSubmit()" method="post" name="fr">
+		<form action="MemberJoinPro.me" onsubmit="return checkSubmit()" method="post" name="fr">
 			<h1>회원가입</h1>
 			
 			<h3>이름</h3>
@@ -331,8 +331,8 @@ $(function() {
 			
 			<h3>성별</h3>
 			<div class="select">
-				<input type="radio" id="남" name="gender" checked="checked"><label for="남">남자</label>
-				<input type="radio" id="여" name="gender"><label for="여">여자</label>
+				<input type="radio" id="남" value="남" name="gender" checked="checked"><label for="남">남자</label>
+				<input type="radio" id="여" value="여" name="gender"><label for="여">여자</label>
 			</div>
 			
 			<input class="input1 button1" type="submit" value="가입하기">

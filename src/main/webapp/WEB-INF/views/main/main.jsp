@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page session="false" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
 <title>Home</title>
@@ -14,8 +13,19 @@
 			<div><a href="./"><img alt="로고" src="resources/images/main_logo.png" height="65px"></a></div>
 		</section>
 		<section class="memberSection">
-			<div><a href="MemberLogin.me"><img src="resources/images/login.png" width="65px" height="65px"><br>로그인</a></div>
-			<div><a href="MemberJoin.me"><img src="resources/images/join.png" width="65px" height="65px"><br>회원가입</a></div>
+		<c:if test="${empty sId}">
+			<div class="logoutStatus">
+				<div><a href="MemberLogin.me"><img src="resources/images/login.png" width="65px" height="65px"><br>로그인</a></div>
+				<div><a href="MemberJoin.me"><img src="resources/images/join.png" width="65px" height="65px"><br>회원가입</a></div>
+			</div>
+		</c:if>
+		<c:if test="${!empty sId}">
+			<div class="loginStatus">
+				<div><a href="MemberLogoutPro.me"><img src="resources/images/login.png" width="65px" height="65px"><br>로그인</a></div>
+				<div>${sId }</div>
+				<div>${sName }</div>
+			</div>
+		</c:if>
 		</section>
 	</section>
 </header>
