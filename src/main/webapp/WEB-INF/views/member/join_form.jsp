@@ -10,7 +10,7 @@
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script src="resources/js/jquery-3.6.0.js"></script>
 <script type="text/javascript">
-// Ajax를 이용한 id와 email 중복 확인
+// Ajax를 이용한 id와 email 중복 확인 및 메일 보내기 ////////////////////////////////////////////////////////////////////
 $(function() {
 	// 아이디 중복 확인
 	$("#idCheck").change(function() {
@@ -31,8 +31,24 @@ $(function() {
 			}
 		});
 	});
-	// 이메일 중복 확인
+	// 이메일 중복 확인 후 이메일 전송
+	var isMailSend=false;
+	var isMailAuth=false;
 	$("#emailCheck").on("click", function() {
+		// 이메일 중복 확인 후 이메일 전송 - 이메일 전송 중이 아니라면 클링 불가능(오류 방지)
+		if(isMailSend){
+			alert("이메일 전송 중 입니다!!!");
+		}
+		// 이메일 인증 확인 후 이메일 전송 - 이메일 확인 완료 됬으면 클링 불가능(오류 방지)
+		if(isMailAuth){
+			alert("이메일 확인이 완료되었습니다!!!");
+			return;
+		}
+		
+		if(document.fr.email.value == "" || document.fr.email2.value == ""){
+			$(".email").html("이메일<span id='fail'> 이메일을 제대로 입력해주십시오</span>");
+			return;
+		}
 		let email = document.fr.email.value + '@' + document.fr.email2.value;
 		$.ajax({
 			type: "get",
@@ -43,6 +59,74 @@ $(function() {
 			dataType: "text",
 			success: function(response) {
 				$(".email").html(response);
+				// 이메일 중복 확인 완료시
+				if($(".email").find('#success').text() != ""){
+					$("#email").attr("readonly", true);
+					$("#email2").attr("readonly", true);
+
+					$("#email").removeAttr("class");
+					$("#email2").removeAttr("class");
+					
+					$("#email").attr("class", "input1 inputUnable");
+					$("#email2").attr("class", "input1 inputUnable");
+					$(".emailAuth").html('이메일 인증<span id="fail"> 인증번호를 전송중 입니다. 기다려주세요...</span>');
+					// 이메일 중복 확인 완료시 메일 보내기 Ajax (오류 방지를 위해 잠시 중지 걸어 둠)
+					isMailSend=true;
+					$.ajax({
+						type: "get",
+						url: "EmailAuthSend.me",
+						data:  {
+							email: email
+						},
+						dataType: "text",
+						success: function(response) {
+							$(".emailAuth").html(response);
+							isMailSend = false;
+						}
+					});
+					
+				}
+			}
+		});
+	});
+	// 이메일 인증번호 확인
+	$("#emailAuthCheck").on("click",function() {
+		// 이메일 중복 확인 후 이메일 전송 - 이메일 전송 중이 아니라면 클링 불가능(오류 방지)
+		if(isMailSend){
+			alert("이메일 전송 중 입니다!!!");
+		}
+		// 이메일 인증 확인 후 이메일 전송 - 이메일 확인 완료 됬으면 클링 불가능(오류 방지)
+		if(isMailAuth){
+			alert("이메일 확인이 완료되었습니다!!!");
+			return;
+		}
+		let email = document.fr.email.value + '@' + document.fr.email2.value;
+		if($(".email").find('#success').text() == ""){
+			$(".emailAuth").html("이메일<span id='fail'> 이메일 중복체크부터 해주세요...</span>");
+			return;
+		}
+		let authCode = document.fr.authCode.value;
+		if(document.fr.authCode.value == ""){
+			$(".emailAuth").html("이메일<span id='good'> 인증코드가 입력되지 않았습니다...</span>");
+			return;
+		}
+		$.ajax({
+			type: "get",
+			url: "EmailAuthCheck.me",
+			data:  {
+				email : email,
+				authCode: authCode
+			},
+			dataType: "text",
+			success: function(response) {
+				$(".emailAuth").html(response);
+				// 인증번호 완료 시
+				if($(".emailAuth").find('#success').text() != ""){
+					$("#authCode").attr("readonly", true);
+					$("#authCode").removeAttr("class");
+					$("#authCode").attr("class", "input1 inputUnable");
+					isMailAuth=true;
+				}
 			}
 		});
 	});
@@ -50,11 +134,19 @@ $(function() {
 	// 비밀번호 입력 처리
 	$("#passwdCheck").change(function() {
 		let passwd = document.fr.passwd.value;
+		let passwd2 = document.fr.passwd2.value;
 		if(passwd.length < 8 || passwd.length > 16){
 			$(".passwd").html("비밀번호<span id='fail'> 비밀번호를 8~16자리로 입력해주십시오</span>");
 			return;
 		} else {
 			$(".passwd").html("비밀번호<span id='success'> 사용가능한 비밀번호 입니다!</span>");
+			if(passwd2 != passwd){
+				$(".passwd2").html("비밀번호 확인<span id='fail'> 비밀번호가 일치하지 않습니다.</span>");
+				return;
+			} else {
+				$(".passwd2").html("비밀번호 확인<span id='success'> 확인 완료!</span>");
+				return;
+			}
 			return;
 		}
 	});
@@ -71,41 +163,8 @@ $(function() {
 		}
 	});
 });
-	
-	// 중복체크 - 아이디 조금이라도 바뀌면 X 표시
-	function checkIdOnkeydown() {
-		var spanCheckIdResult = document.getElementById("duplicate");
-		spanCheckIdResult.innerHTML = " 중복체크 X";
-		spanCheckIdResult.style.color = "RED";
-	}
-	
-	// 비밀번호 길이 판별
-	function checkPasswdLength() {
-		// 입력된 패스워드가 8자리 ~ 16자리 사이가 아닐 경우
-		if(document.fr.user_passwd.value.length < 8 || document.fr.user_passwd.value.length > 16) {
-			alert("패스워드는 8~16자리 필수!");
-			document.fr.user_passwd.select();
-		}
-	}
-	
-	// 비밀번호 & 비밀번호확인란이 같은지 판별(패스워드확인란 글자 입력할 때마다 호출 = onkeyup)
-	function checkConfirmPasswd() {
-		// 결과를 표시할 span 태그 영역 객체 가져오기
-		let confirmPasswdResult = document.getElementById("confirmPasswdResult");
-		// 입력된 두 패스워드 가져오기
-		let passwd = document.fr.user_passwd.value;
-		let passwd2 = document.fr.user_passwd2.value;
-		
-		// 두 패스워드 비교
-		if(passwd == passwd2) {
-			confirmPasswdResult.innerHTML = "비밀번호 일치";
-			confirmPasswdResult.style.color = "GREEN";
-		} else {
-			confirmPasswdResult.innerHTML = "비밀번호 불일치";
-			confirmPasswdResult.style.color = "RED";
-		}
-	}
-	
+//Ajax를 이용한 id와 email 중복 확인 및 메일 보내기 끝 ////////////////////////////////////////////////////////////////////
+ 
 	// ------------------------------------------------------------------------------------
 	// 다음 우편번호 API 추가
 	function execDaumPostcode() {
@@ -135,7 +194,7 @@ $(function() {
                 // 우편번호와 주소 정보를 해당 필드에 넣는다.
                 document.getElementById("postcode").value = data.zonecode;
                 document.getElementById("roadAddress").value = roadAddr;
-//                 document.getElementById("sample4_jibunAddress").value = data.jibunAddress;
+				// document.getElementById("sample4_jibunAddress").value = data.jibunAddress;
             }
 		 
         }).open();
@@ -143,20 +202,47 @@ $(function() {
 	
 	// 회원가입 완료 시 확인용
 	function checkSubmit(){
-		// 중복이면 가입 X
-		if(document.getElementById("duplicate").innerHTML == " 중복체크 X"){
-			alert("이메일 중복체크를 하지않았습니다!");
-			document.fr.user_email.select();
+		if($(".id").find('#success').text() == ""){
+			alert("아이디 중복체크가 완료되지 않았습니다.");
+			$("#idCheck").focus();
 			return false;
 		}
-		// 비밀번호가 일치하지 않으면 가입 X
-		if(document.getElementById("confirmPasswdResult").innerHTML == "비밀번호 불일치"){
-			alert("비밀번호가 다릅니다!");
-			document.fr.user_passwd.select();
+		if($(".email").find('#success').text() == ""){
+			alert("이메일 중복체크가 완료되지 않았습니다.");
+			$("#emailCheck").focus();
+			return false;
+		}
+		if($(".emailAuth").find('#success').text() == ""){
+			alert("이메일 인증이 완료되지 않았습니다.");
+			$("#emailAuthCheck").focus();
+			return false;
+		}
+		if($(".passwd").find('#success').text() == ""){
+			alert("비밀번호가 8~16 글자 사이가 아닙니다.");
+			$("#passwdCheck").focus();
+			return false;
+		}
+		if($(".passwd2").find('#success').text() == ""){
+			alert("비밀번호가 일치하지 않습니다.");
+			$("#passwdCheck2").focus();
+			return false;
+		}
+		if($("#postcode").val() == ""){
+			alert("우편 번호 및 도로명 주소를 입력하지 않았습니다.");
+			$("#postcodeCheck").focus();
+			return false;
+		}
+		if($("#postcode").val() == ""){
+			alert("우편 번호 및 도로명 주소를 입력하지 않았습니다.");
+			$("#postcodeCheck").focus();
+			return false;
+		}
+		if($("#phone").val().length != 11){
+			alert("휴대폰 번호는 11자리 이여야 합니다");
+			$("#phone").focus();
 			return false;
 		}
 		return true;
-		
 	}
 	
 </script>
@@ -170,28 +256,38 @@ $(function() {
 	<!-- 로고지역 끝 -->
 	
 	<section>
-		<form action="UserJoinPro.us" onsubmit="return checkSubmit()" method="post" name="fr">
+		<form action="MemberJoinPro.us" onsubmit="return checkSubmit()" method="post" name="fr">
 			<h1>회원가입</h1>
 			
 			<h3>이름</h3>
-			<input class="input1 inputAble" type="text" name="name" required="required">
+			<input class="input1 inputAble" type="text" placeholder="이름입력" name="name" required="required">
 			
 			<h3 class="id">아이디<span id="fail"> 아이디를 입력하세요.</span></h3>
-			<input id="idCheck" class="input1 inputAble" type="text" name="id" required="required">
+			<input id="idCheck" class="input1 inputAble" type="text" name="id" required="required" placeholder="아이디 입력"  maxlength="16">
 			
 			<h3 class="email">이메일<span id="fail"> 이메일을 입력하세요.</span></h3>
 			<div class="inputGroups">
 				<div class="inputGroup">
-					<input class="input1 inputAble" type="text" name="email" required="required">
+					<input id="email" class="input1 inputAble" type="text" name="email" placeholder="이메일 입력" required="required">
 				</div>
 				<div class="inputGroupDot">
 					@
 				</div>
 				<div class="inputGroup">
-					<input class="input1 inputAble" type="text" name="email2" required="required">
+					<input id="email2" class="input1 inputAble" type="text" name="email2" placeholder="example.com" required="required">
 				</div>
 				<div class="inputGroup">
-					<input id="emailCheck" class="input1 button1" type="button" value="인증번호">
+					<input id="emailCheck" class="input1 button1" type="button" value="인증번호 보내기">
+				</div>
+			</div>
+			
+			<h3 class="emailAuth">이메일 인증<span id="fail"> 이메일을 인증하세요.</span></h3>
+			<div class="inputGroups">
+				<div class="inputGroup">
+					<input id="authCode" class="input1 inputAble" type="text" name="authCode" placeholder="이메일 인증 번호 입력" required="required">
+				</div>
+				<div class="inputGroup">
+					<input id="emailAuthCheck" class="input1 button1" type="button" value="인증번호 확인">
 				</div>
 			</div>
 				
@@ -207,18 +303,18 @@ $(function() {
 			<h3>우편 번호 및 도로명 주소</h3>
 		 	<div class="inputGroups">
 		 		<div class="inputGroup">
-					<input class="input1 inputAble" type="text" class="input2 inputAble" id="postcode" name="address_code" placeholder="우편번호" required="required" readonly="readonly" onclick="execDaumPostcode()">
+					<input id="postcode" class="input1 inputUnable" type="text" class="input2 inputAble" id="postcode" name="address_code" placeholder="우편번호" required="required" readonly="readonly" onclick="execDaumPostcode()">
 				</div>
 		 		<div class="inputGroupThirty">
-					<input class="input1 button1" type="button" class="input2 inputAble" onclick="execDaumPostcode()" value="우편번호 찾기">
+					<input id="postcodeCheck" class="input1 button1" type="button" class="input2 inputAble" onclick="execDaumPostcode()" value="우편번호 찾기">
 				</div>
 			</div>
-			<input type="text" class="input1 inputAble" id="roadAddress" name="address"  placeholder="도로명주소" required="required" readonly="readonly" onclick="execDaumPostcode()">
+			<input type="text" class="input1 inputUnable" id="roadAddress" name="address"  placeholder="도로명주소" required="required" readonly="readonly" onclick="execDaumPostcode()">
 			<h3>상세 주소</h3>
 			<input type="text" class="input1 inputAble" id="detailAddress" name="address2"  placeholder="상세주소" required="required">
 			
 			<h3>휴대폰</h3>
-			<input class="input1 inputAble" type="text" name="phone" maxlength="11" placeholder="-없이 숫자만 입력" required="required">
+			<input id="phone" class="input1 inputAble" type="text" name="phone" maxlength="11" placeholder="-없이 숫자만 입력" required="required" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
 			
 			<h3>주민번호</h3>
 			<div class="inputGroups">

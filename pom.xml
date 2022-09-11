@@ -149,6 +149,15 @@
 		</dependency>
 		<!-- mybatis 사용하기 위해 등등 설치 끝 -->
 		
+		<!-- 메일 전송을 사용하기 위한 설치 -->
+		<!-- https://mvnrepository.com/artifact/javax.mail/mail -->
+		<dependency>
+		    <groupId>javax.mail</groupId>
+		    <artifactId>mail</artifactId>
+		    <version>1.4.7</version>
+		</dependency>
+		<!-- 메일 전송을 사용하기 위한 설치 끝 -->
+		
 		<!-- Test -->
 		<dependency>
 			<groupId>junit</groupId>

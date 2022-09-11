@@ -11,4 +11,19 @@
 		SELECT * FROM member 
 		WHERE email=#{email}
 	</select>
+	
+	<select id="getEmailAuthFromEmail" resultType="com.spring.member.vo.EmailAuthVO">
+		SELECT * FROM email_auth 
+		WHERE email=#{email}
+	</select>
+	
+	<insert id="sendEmailAuthCode">
+		INSERT INTO email_auth 
+		VALUES(#{email}, #{authCode})
+	</insert>
+	
+	<update id="sendEmailAuthCodeUpdate">
+		UPDATE email_auth SET auth_code=#{authCode} 
+		WHERE email=#{email}
+	</update>
 </mapper>

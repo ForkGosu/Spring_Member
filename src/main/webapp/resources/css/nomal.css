@@ -18,6 +18,9 @@ a:hover {
 span#fail{
 	color: red;
 }
+span#good{
+	color: #ee7700;
+}
 span#success{
 	color: green;
 }
@@ -81,8 +84,9 @@ header .memberSection div:hover{
 }
 
 .inputUnable{
-	border: 2px solid red;
+	border: 2px solid #999;
 	box-sizing : border-box;
+	background-color: #eee;
 }
 
 .inputGroups{
