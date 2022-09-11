@@ -228,8 +228,8 @@ public class MemberController {
 		if(member != null) {
 			// 패스워드가 맞는지 확인
 			if(member.getPasswd().equals(passwd)) {
-				session.setAttribute("sId", member.getEmail());
 				session.setAttribute("sName", member.getName());
+				session.setAttribute("sId", member.getId());
 				return "redirect:/";
 			}else {
 				model.addAttribute("msg","로그인 실패!");

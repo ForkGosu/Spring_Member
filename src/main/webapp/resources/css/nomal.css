@@ -26,7 +26,7 @@ span#success{
 }
 /* 헤더 지역 */
 header .top{
-	height: 100px;
+	height: 160px;
 	background-color: #4376E6;
 }
 .top section{
@@ -51,11 +51,6 @@ header .memberSection .logoutStatus>div a{
 header .memberSection .logoutStatus>div:hover{
 	background-color: #999;
 }
-
-header .memberSection .loginStatus{
-	background-color: #999;
-}
-
 /* 헤더 지역 끝 */
 
 /* 로그인 지역? */
@@ -167,11 +162,142 @@ header .memberSection .loginStatus{
     background-color: #333;
     color: #fff;
 }
+
 /* 로그인 지역? 끝 */
 
+/* 로그인 되었을 시 로그인 창 지역 */
 
 
+.loginStatus{
+	position:relative;
+	top:10px;
+	background-color: #f7f9fa;
+	display: inline-block;
+	width: 279px;
+	border: 1px solid #e4e8eb; 
+	border-radius: 10px;
+}
+.loginStatus .info_area{
+	overflow: hidden;
+    padding: 10px 10px;
+}
 
+.loginStatus .btn_logout{
+    position: absolute;
+    top: 12px;
+    right: 10px;
+    padding: 6px 10px 6px 11px;
+    background-color: #ccd0d4;
+    border-radius: 14px;
+    font-size: 11px;
+    color: #fff;
+    text-decoration: none;
+}
+.loginStatus .btn_logout:hover{
+	color: black;
+	background-color: #b4c7ef;	
+}
+.info_area .user_thumb {
+    float: left;
+    position: relative;
+    margin-right: 16px;
+}
+.info_area .user_thumb>img {
+    border-radius: 50%;
+    vertical-align: top;
+    width: 56px;
+    aspect-ratio: auto 56 / 56;
+    height: 56px;
+}
+.info_area .user_info {
+    overflow: hidden;
+}
+.user_info .link_set {
+    font-size: 10px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.user_info .name {
+	font-weight: bold;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+    max-width: 130px;
+    vertical-align: top;
+    text-decoration: none;
+    color: inherit;
+    margin-top: 5px;
+}
+.user_info .id {
+	margin-top: 10px;
+	font-size: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-top: 1px;
+    color: grey;
+}
+.tab_area .tab_box {
+    float: left;
+/*     margin-top: 18px; */
+    width: 279px;
+    height: 40px;
+    border: 1px solid #e4e8eb;
+    border-width: 1px 0 0;
+    font-size: 0;
+    line-height: 0;
+    white-space: nowrap;
+    text-align: center;
+}
+.tab_area .tab {
+    color: black;
+    display: inline-block;
+    position: relative;
+    width: 69px;
+    height: 16px;
+    padding: 13px 0 11px;
+    font-size: 11px;
+    line-height: 16px;
+    font-weight: 700;
+    text-align: center;
+    vertical-align: top;
+    letter-spacing: 2px;
+    text-decoration: none !important;
+    white-space: nowrap;
+}
+
+.tab_area .adminTab {
+    color: black;
+    display: inline-block;
+    position: relative;
+    width: 280px;
+    height: 16px;
+    padding: 13px 0 11px;
+    font-size: 11px;
+    line-height: 16px;
+    font-weight: 700;
+    text-align: center;
+    vertical-align: top;
+    letter-spacing: 2px;
+    text-decoration: none !important;
+    white-space: nowrap;
+}
+.tab_area .tab:hover {
+	color: black;
+	background-color: #b4c7ef;	
+}
+
+.tab_area .adminTab:hover {
+	color: black;
+	background-color: #b4c7ef;	
+}
+
+.tab_area .tab+.tab {
+    border-left: 1px solid #e4e8eb;
+}
+/* 로그인 되었을 시 로그인 창 지역 끝 */
 
 
 
