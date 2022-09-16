@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.spring.member.vo.EmailAuthVO;
+import com.spring.member.vo.KakaoMemberVO;
 import com.spring.member.vo.MemberVO;
 
 @Mapper
@@ -20,6 +21,10 @@ public interface MemberMapper {
 	public boolean sendEmailAuthCodeUpdate(EmailAuthVO emailAuth);
 
 	public boolean joinMember(MemberVO member);
+
+	public KakaoMemberVO getKakaoMemberFromId(@Param("id")String id);
+
+	public boolean joinKakaoMember(KakaoMemberVO member);
 
 
 }

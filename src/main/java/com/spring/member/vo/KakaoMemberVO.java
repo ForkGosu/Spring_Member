@@ -3,12 +3,11 @@ package com.spring.member.vo;
 import java.sql.Date;
 
 /*
-create table member(
+create table member_kakao(
 date date not null,
 name varchar(20) not null,
 id varchar(20) unique not null,
 email varchar(64) unique not null,
-passwd varchar(32) not null,
 birthday varchar(6) not null,
 gender varchar(1) not null,
 phone varchar(11) not null,
@@ -16,18 +15,16 @@ address_code int not null,
 address varchar(100) not null
 );
  */
-public class MemberVO {
+public class KakaoMemberVO {
 	private Date date;
 	private String name;
 	private String id;
 	private String email;
-	private String passwd;
-	private String birthday;
 	private String gender;
+	private String birthday;
 	private String phone;
 	private int address_code;
 	private String address;
-	
 	public Date getDate() {
 		return date;
 	}
@@ -52,23 +49,17 @@ public class MemberVO {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public String getPasswd() {
-		return passwd;
+	public String getGender() {
+		return gender;
 	}
-	public void setPasswd(String passwd) {
-		this.passwd = passwd;
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 	public String getBirthday() {
 		return birthday;
 	}
 	public void setBirthday(String birthday) {
 		this.birthday = birthday;
-	}
-	public String getGender() {
-		return gender;
-	}
-	public void setGender(String gender) {
-		this.gender = gender;
 	}
 	public String getPhone() {
 		return phone;
@@ -90,9 +81,10 @@ public class MemberVO {
 	}
 	@Override
 	public String toString() {
-		return "MemberVO [date=" + date + ", name=" + name + ", id=" + id + ", email=" + email + ", passwd=" + passwd
-				+ ", birthday=" + birthday + ", gender=" + gender + ", phone=" + phone + ", address_code="
-				+ address_code + ", address=" + address + "]";
+		return "KakaoMemberVO [date=" + date + ", name=" + name + ", id=" + id + ", email=" + email + ", gender="
+				+ gender + ", birthday=" + birthday + ", phone=" + phone + ", address_code=" + address_code
+				+ ", address=" + address + "]";
 	}
+	
 	
 }

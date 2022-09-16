@@ -316,18 +316,8 @@ $(function() {
 			<h3>휴대폰</h3>
 			<input id="phone" class="input1 inputAble" type="text" name="phone" maxlength="11" placeholder="-없이 숫자만 입력" required="required" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
 			
-			<h3>주민번호</h3>
-			<div class="inputGroups">
-				<div class="inputGroup">
-					<input class="input1 inputAble" type="text" name="jumin" required="required" maxlength="6">
-				</div>
-				<div class="inputGroupDot">
-					-
-				 </div>
-				<div class="inputGroup">
-					<input class="input1 inputAble" type="password" name="jumin2" required="required" maxlength="7">
-				</div>
-			</div>
+			<h3>생년월일</h3>
+			<input class="input1 inputAble" type="text" placeholder="생년월일입력" name="birthday" maxlength="6" required="required">
 			
 			<h3>성별</h3>
 			<div class="select">

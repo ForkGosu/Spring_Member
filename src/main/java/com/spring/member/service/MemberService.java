@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.spring.member.mapper.MemberMapper;
 import com.spring.member.vo.EmailAuthVO;
+import com.spring.member.vo.KakaoMemberVO;
 import com.spring.member.vo.MemberVO;
 
 @Service
@@ -35,6 +36,14 @@ public class MemberService {
 
 	public boolean joinMember(MemberVO member) {
 		return mapper.joinMember(member);
+	}
+
+	public KakaoMemberVO getKakaoMemberFromId(String id) {
+		return mapper.getKakaoMemberFromId(id);
+	}
+
+	public boolean joinKakaoMember(KakaoMemberVO member) {
+		return mapper.joinKakaoMember(member);
 	}
 
 }

@@ -29,7 +29,7 @@
 						<!-- 유저 ID, 이메일, 등등 -->
 						<div class="user_info">
 							<a href="" class="name">${sName }</a><br>
-							<div class="id">${sId }</div>
+<%-- 							<div class="id">${sId }</div> --%>
 						</div>
 					</div>
 					<div class="tab_area">

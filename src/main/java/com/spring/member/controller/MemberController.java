@@ -20,6 +20,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,6 +29,7 @@ import com.spring.member.service.MemberService;
 import com.spring.member.vo.EmailAuthVO;
 import com.spring.member.vo.GenerateUserAuthenticationCode;
 import com.spring.member.vo.GmailSMTPAuthenticator;
+import com.spring.member.vo.KakaoMemberVO;
 import com.spring.member.vo.MemberVO;
 
 @Controller
@@ -196,7 +198,6 @@ public class MemberController {
 			@RequestParam(defaultValue = "")String email2, @RequestParam(defaultValue = "")String address2, @RequestParam(defaultValue = "")String jumin2) {
 		member.setEmail(member.getEmail()+'@'+email2);
 		member.setAddress(member.getAddress()+' '+address2);
-		member.setJumin(member.getJumin()+'-'+jumin2);
 		System.out.println(member);
 		
 		
@@ -247,6 +248,33 @@ public class MemberController {
 		request.getSession().invalidate();
 		return "redirect:/";
 	}
+	
+	// 카카오톡 로그인
+	@RequestMapping(value = "/KakaoLoginPro.me", method = RequestMethod.GET)
+	public String KakaoLoginPro(Model model, HttpSession session, KakaoMemberVO member) {
+		KakaoMemberVO kakaoMember = service.getKakaoMemberFromId(member.getId());
+		
+		if(kakaoMember != null) { // 카카오 아이디가 있다면 바로 로그인
+			session.setAttribute("sName", member.getName());
+			session.setAttribute("sId", member.getId());
+			return "redirect:/";
+		} else { //카카오 아이디가 없다면 회원가입 후 로그인
+			// 2가지는 선택사항이기 때문에 없다면 0으로 넣어준다 (DB를 not null로 만들었기 때문)
+			if(member.getEmail() == null) member.setEmail("0");
+			if(member.getBirthday() == null) member.setBirthday("0");
+			boolean isJoin = service.joinKakaoMember(member);
+			if(isJoin) {
+				session.setAttribute("sName", member.getName());
+				session.setAttribute("sId", member.getId());
+				return "redirect:/";
+			} else {
+				model.addAttribute("msg","카카오 회원가입 실패!");
+				return "fail_back";
+			}
+		}
+	}
+	
+	
 	///// 로그인 및 로그아웃에 관한 메서드 끝 /////
 	
 }

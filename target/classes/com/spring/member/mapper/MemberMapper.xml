@@ -29,8 +29,16 @@
 	
 	<insert id="joinMember">
 		INSERT INTO member 
-		VALUES(now(), #{name}, #{id}, #{email}, #{passwd}, #{gender}, #{jumin}, #{phone}, 
-		#{address_code}, #{address});
+		VALUES(now(), #{name}, #{id}, #{email}, #{passwd}, #{birthday}, #{gender}, #{phone}, #{address_code}, #{address});
 	</insert>
 	
+	<select id="getKakaoMemberFromId" resultType="com.spring.member.vo.KakaoMemberVO">
+		SELECT * FROM kakao_member 
+		WHERE id=#{id}
+	</select>
+	
+	<insert id="joinKakaoMember">
+		INSERT INTO kakao_member 
+		VALUES(now(), #{name}, #{id}, #{email}, #{birthday}, 'N', '0', 0, '0');
+	</insert>
 </mapper>
