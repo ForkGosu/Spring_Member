@@ -244,7 +244,9 @@ $(function() {
 		}
 		return true;
 	}
-	
+	function SpecialCharStop(val){
+		val.value = val.value.replace(/[^0-9a-zA-Z\..]/g, '');
+	}
 </script>
 </head>
 <body>
@@ -263,18 +265,18 @@ $(function() {
 			<input class="input1 inputAble" type="text" placeholder="이름입력" name="name" required="required">
 			
 			<h3 class="id">아이디<span id="fail"> 아이디를 입력하세요.</span></h3>
-			<input id="idCheck" class="input1 inputAble" type="text" name="id" required="required" placeholder="아이디 입력"  maxlength="16">
+			<input id="idCheck" class="input1 inputAble" type="text" name="id" required="required" placeholder="아이디 입력"  maxlength="16" onkeyup="SpecialCharStop(this)" onchange="SpecialCharStop(this)">
 			
 			<h3 class="email">이메일<span id="fail"> 이메일을 입력하세요.</span></h3>
 			<div class="inputGroups">
 				<div class="inputGroup">
-					<input id="email" class="input1 inputAble" type="text" name="email" placeholder="이메일 입력" required="required">
+					<input id="email" class="input1 inputAble" type="text" name="email" placeholder="이메일 입력" required="required" onkeyup="SpecialCharStop(this)" onchange="SpecialCharStop(this)">
 				</div>
 				<div class="inputGroupDot">
 					@
 				</div>
 				<div class="inputGroup">
-					<input id="email2" class="input1 inputAble" type="text" name="email2" placeholder="example.com" required="required">
+					<input id="email2" class="input1 inputAble" type="text" name="email2" placeholder="example.com" required="required" onkeyup="SpecialCharStop(this)" onchange="SpecialCharStop(this)">
 				</div>
 				<div class="inputGroup">
 					<input id="emailCheck" class="input1 button1" type="button" value="인증번호 보내기">
