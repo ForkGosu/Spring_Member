@@ -12,7 +12,7 @@
 		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver"></property>
 		<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/Spring_Member"></property>
 		<property name="username" value="root"></property>
-		<property name="password" value="1234"></property>
+		<property name="password" value="tree6316@Naver.com"></property>
 	</bean>
 	
 	<!-- 2. HikariCP 의 DataSource 객체 생성 - 전달인자로 HikariConfig 객체 (변수명 hikariConfig) 전달 -->
@@ -30,6 +30,5 @@
 	</bean>
 	
 	<!-- Mybatis 연동에 사용될 객체들의 패키지 위치 지정 -->
-	
 	<mybatis-spring:scan base-package="com.spring.member"/>
 </beans>
